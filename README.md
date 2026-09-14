@@ -30,7 +30,11 @@ Launcher and verified engine archive; it never bundles anyone's licensed game
 files.
 
 On first launch, select **Use Detected Copy**, choose the original wrapper, or
-drag the wrapper onto the window. mac3 embeds these private files inside
+drag the wrapper onto the window. A manually selected folder must be complete,
+including `models/gta3.img` and `models/fonts.txd`; mac3 rejects partial
+exports instead of building an app that cannot start. After setup, **Replace
+Game Data…** lets you recover from a bad source without a separate manager.
+mac3 embeds these private files inside
 `mac3.app/Contents/Resources/Portable/`:
 
 - `Playable/mac3.app` — an internal engine bundle, not a second app to open;

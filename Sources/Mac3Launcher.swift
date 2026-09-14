@@ -110,6 +110,7 @@ struct ContentView: View {
                         Button("Install \(update.version)") { launcher.install(update) }.disabled(launcher.isBusy)
                     }
                     Button("Rebuild") { launcher.rebuild() }.disabled(launcher.isBusy)
+                    Button("Replace Game Data…") { launcher.chooseSource() }.disabled(launcher.isBusy)
                 }
             }
             .frame(maxWidth: .infinity, alignment: .leading)
@@ -153,7 +154,7 @@ final class LauncherStore: ObservableObject {
     func chooseSource() {
         let panel = NSOpenPanel()
         panel.title = "Choose your original GTA III app or game folder"
-        panel.message = "Select the original Steam wrapper or the folder containing models/gta3.img."
+        panel.message = "Select the original Steam wrapper or complete game folder containing models/gta3.img and models/fonts.txd."
         panel.canChooseFiles = true; panel.canChooseDirectories = true; panel.allowsMultipleSelection = false
         guard panel.runModal() == .OK, let url = panel.url else { return }
         importAndBuild(from: url)
@@ -310,8 +311,14 @@ final class LauncherStore: ObservableObject {
             root.appendingPathComponent("Contents/SharedSupport/prefix/drive_c/Program Files (x86)/Rockstar Games/GTAIII"),
             root.appendingPathComponent("Contents/SharedSupport/prefix/drive_c/Program Files/Rockstar Games/GTAIII")
         ]
-        for candidate in candidates where FileManager.default.fileExists(atPath: candidate.appendingPathComponent("models/gta3.img").path) { return candidate }
-        throw LauncherError("No GTA III data found. Expected models/gta3.img in the selected item.")
+        for candidate in candidates {
+            let gameImage = candidate.appendingPathComponent("models/gta3.img")
+            let fonts = candidate.appendingPathComponent("models/fonts.txd")
+            if FileManager.default.fileExists(atPath: gameImage.path), FileManager.default.fileExists(atPath: fonts.path) {
+                return candidate
+            }
+        }
+        throw LauncherError("Incomplete GTA III data. Choose the original game folder containing both models/gta3.img and models/fonts.txd.")
     }
     private static func detectedSource() -> URL? {
         let home = URL(fileURLWithPath: NSHomeDirectory())
