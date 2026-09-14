@@ -184,7 +184,11 @@ final class LauncherStore: ObservableObject {
         guard playableAppExists, runningGame == nil else { return }
         let process = Process()
         process.executableURL = playableAppURL.appendingPathComponent("Contents/MacOS/mac3")
-        process.currentDirectoryURL = Self.gameDataURL()
+        // mac3's CFileMgr resolves ../Resources/GameData from Contents/MacOS.
+        // Starting it in GameData makes that relative setup point at a
+        // non-existent nested directory and causes its case-insensitive
+        // asset resolver to spin indefinitely.
+        process.currentDirectoryURL = playableAppURL.appendingPathComponent("Contents/MacOS", isDirectory: true)
         process.terminationHandler = { [weak self] _ in
             DispatchQueue.main.async {
                 guard let self else { return }
