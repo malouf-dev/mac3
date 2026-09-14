@@ -23,10 +23,10 @@ explicit **Install** must match the SHA-256 declared by the fetched manifest,
 then is cached inside mac3.app and used to rebuild its internal engine.
 
 The opaque native engine contains an old updater that can launch the upstream
-Terminal installer. mac3 replaces that fixed-size version-check command with a
-local `true` command, then ad-hoc re-signs both the engine and portable outer
-app. A changed engine layout fails the build rather than silently using the
-old updater.
+Terminal installer. mac3 replaces both fixed-size legacy commands with local
+`true` commands, then ad-hoc re-signs both the engine and portable outer app.
+A changed engine layout fails the build rather than silently using the old
+updater.
 
 The checksum guards against accidental corruption, but it is not a release
 signature: the manifest and archive currently come from the same GitHub fork.

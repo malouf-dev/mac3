@@ -52,6 +52,6 @@ When you select **Play**, mac3 hides its Launcher window, Dock icon, and menu
 bar while it runs the internal engine directly. When the game quits, the
 Launcher returns. The Launcher and game use the same mac3 icon for continuity.
 
-Do not use the original engine's Terminal updater. mac3 patches that legacy
-version check to behave as offline, then re-signs the internal engine, so this
-fork remains the only update path.
+Do not use the original engine's Terminal updater. mac3 disables its legacy
+version check and Terminal-installer command, then re-signs the internal
+engine, so this fork remains the only update path.

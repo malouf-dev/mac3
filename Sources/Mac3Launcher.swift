@@ -366,11 +366,18 @@ final class LauncherStore: ObservableObject {
         try run("/usr/bin/codesign", ["--verify", "--deep", "--strict", launcher.path])
     }
     private static func disableLegacyUpdater(in executable: URL) throws {
-        let command = "curl -fsSL --connect-timeout 2 -m 5 https://raw.githubusercontent.com/gtamac/mac3/main/version.sha 2>/dev/null"
-        let needle = Data(command.utf8)
         var data = try Data(contentsOf: executable)
-        guard let range = data.range(of: needle) else { throw LauncherError("Cannot locate the legacy updater command in this distribution.") }
-        data.replaceSubrange(range, with: Data("true".utf8) + Data(repeating: 0, count: needle.count - 4))
+        let commands = [
+            "curl -fsSL --connect-timeout 2 -m 5 https://raw.githubusercontent.com/gtamac/mac3/main/version.sha 2>/dev/null",
+            "osascript -e 'tell application \"Terminal\" to activate' -e 'tell application \"Terminal\" to do script \"curl -fsSL https://raw.githubusercontent.com/gtamac/mac3/main/quick-install.sh | bash\"'"
+        ]
+        for command in commands {
+            let needle = Data(command.utf8)
+            guard let range = data.range(of: needle) else {
+                throw LauncherError("Cannot locate a legacy updater command in this distribution.")
+            }
+            data.replaceSubrange(range, with: Data("true".utf8) + Data(repeating: 0, count: needle.count - 4))
+        }
         try data.write(to: executable, options: .atomic)
     }
     @discardableResult private static func run(_ command: String, _ arguments: [String]) throws -> String {
