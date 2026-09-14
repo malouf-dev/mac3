@@ -367,6 +367,18 @@ final class LauncherStore: ObservableObject {
     }
     private static func disableLegacyUpdater(in executable: URL) throws {
         var data = try Data(contentsOf: executable)
+        // In mac3 1.0.3183, CGame::InitialiseOnceBeforeRW calls
+        // ValidateVersion() at this fixed Mach-O file offset. The old routine
+        // invokes the upstream curl/Terminal updater and crashes when it has
+        // no response. Replace its single `bl ValidateVersion` with `nop`.
+        let versionCheckCallOffset = 0xE9288
+        let expectedCall = Data([0x46, 0xE7, 0x00, 0x94])
+        let noOperation = Data([0x1F, 0x20, 0x03, 0xD5])
+        guard data.count >= versionCheckCallOffset + expectedCall.count,
+              data.subdata(in: versionCheckCallOffset..<(versionCheckCallOffset + expectedCall.count)) == expectedCall else {
+            throw LauncherError("Cannot locate the legacy version-check call in this distribution.")
+        }
+        data.replaceSubrange(versionCheckCallOffset..<(versionCheckCallOffset + expectedCall.count), with: noOperation)
         let commands = [
             "curl -fsSL --connect-timeout 2 -m 5 https://raw.githubusercontent.com/gtamac/mac3/main/version.sha 2>/dev/null",
             "osascript -e 'tell application \"Terminal\" to activate' -e 'tell application \"Terminal\" to do script \"curl -fsSL https://raw.githubusercontent.com/gtamac/mac3/main/quick-install.sh | bash\"'"
