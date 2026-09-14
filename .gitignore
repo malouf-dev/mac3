@@ -1,0 +1,4 @@
+# Licensed GTA III assets and generated application bundles must stay local.
+.DS_Store
+/SteamFiles/
+/dist/
