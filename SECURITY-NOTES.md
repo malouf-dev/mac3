@@ -9,7 +9,7 @@ archive and signs the Launcher with macOS `codesign`:
 
 ```text
 mac3-macos-arm64.tar.gz
-7c1a04fba5e95882a20a6fdddc17f5cccbe43eb443b750b2b001dddf19ce705e
+212c049ba8e1aae1652e0e4fb56b121045e387a61dbceb8177077562a27b3d35
 ```
 
 The output is ad-hoc signed and not Apple-notarized. After first setup, it is

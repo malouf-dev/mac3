@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
   "product": "mac3",
-  "version": "1.0.3178",
+  "version": "1.0.3183",
   "archiveURL": "https://raw.githubusercontent.com/malouf-dev/mac3/main/mac3-macos-arm64.tar.gz",
-  "archiveSHA256": "7c1a04fba5e95882a20a6fdddc17f5cccbe43eb443b750b2b001dddf19ce705e",
-  "releaseNotes": "Bundled Apple Silicon distribution 1.0.3178."
+  "archiveSHA256": "212c049ba8e1aae1652e0e4fb56b121045e387a61dbceb8177077562a27b3d35",
+  "releaseNotes": "Bundled Apple Silicon distribution 1.0.3183."
 }
