@@ -271,7 +271,9 @@ final class LauncherStore: ObservableObject {
     }
 
     private func refreshState() {
-        hasImportedGameData = fileManager.fileExists(atPath: Self.gameDataURL().appendingPathComponent("models/gta3.img").path)
+        let gameData = Self.gameDataURL()
+        hasImportedGameData = fileManager.fileExists(atPath: gameData.appendingPathComponent("models/gta3.img").path)
+            && fileManager.fileExists(atPath: gameData.appendingPathComponent("models/fonts.txd").path)
         playableAppExists = fileManager.fileExists(atPath: playableAppURL.path)
     }
     private func setStatus(_ text: String, error: Bool) { status = text; hasError = error }
